@@ -68,7 +68,7 @@ html {
 </head>
 <body>
 <div class="container-fluid">
-	<h1 id="header" > Click on a Fall Activity </h1>
+	<h1 id="header" > Click on a Halloween Movie Title or a Fall Activity </h1>
 	<div id="buttonsView"></div>
     <img class="" src="assets/pumpkins.jpeg" alt="HalloweenPumpkin">
 	<form id="movie-form">
@@ -127,7 +127,7 @@ html {
 	  $('#buttonsView').on('click', '.activity', function() {
 	  	var m = $(this).text();
         // Sets a variable to the API url with the api key and tag included
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + m + "&api_key=7Y00G7y7Ttg5Ybg2i4NExpJ0umrIEkX3&limit=10";
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + m + "&api_key=7Y00G7y7Ttg5Ybg2i4NExpJ0umrIEkX3&limit=10";
         $.ajax({url: queryURL, method: 'GET'})
 
         .done(function(response) {
