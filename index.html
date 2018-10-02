@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Halloween Movies, and Activities</title>
+	<style>
+    
+html {
+	background: orange;
+    
+}
+
+.container-fluid {
+	height: auto;
+	width: 100%;
+	background: orange;
+	color: black;
+	font-family: 'Anton', sans-serif;
+}
+
+#header {
+	text-align: center;
+	color: black;
+	font-size: 100px;
+}
+
+#buttonsView {
+    color: orange;
+    text-align: center;
+    display: inline-block;
+    font-size: 26px;
+    font-family: 'Anton', sans-serif;
+
+}
+
+
+#movie-form {
+	text-align: center;
+	margin: 50px;
+	color: black;
+	font-family: 'Anton', sans-serif;
+	font-size: 26px;
+}
+
+#movie-input {
+	color: black;
+}
+
+#addMovie {
+	color: orange;
+}
+
+.item {
+	display: inline-block;
+	float: left;
+	margin-left: 20px;
+	margin-bottom: 20px;
+	color: black;
+	font-size: 26px;
+}
+
+    </style>
+	<link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
+
+
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid">
+	<h1 id="header" > Click on a Fall Activity </h1>
+	<div id="buttonsView"></div>
+    <img class="" src="assets/pumpkins.jpeg" alt="HalloweenPumpkin">
+	<form id="movie-form">
+	    <label for="movie-input">Add an Activity</label>
+	    <input type="text" id="movie-input">
+	    
+        <input id="addActivity" type="submit" value="Add a Activity"><br>
+        
+	</form>
+
+	<div id="gifsView"></div>
+</div>
+
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script>
+		// Array of Halloween Activies
+        var august= ['Scream', 'The Conjuring', 'Nightmare on Elm Street', 'Friday The 13th','Pumpkin Carving', 'Haunted Houses', 'Scary Movies', 'Carmaled Apples', 'Pumpkin Pie', 'Witches', 'Ghosts', 'Clowns', 'Vampires', 'Trick or Treating'];
+
+
+	// Function for displaying Activy buttons
+	function renderButtons(){ 
+
+		// Deletes the activities prior to adding new activities 
+		$('#buttonsView').empty();
+
+		// Loops through the array of movies
+		for (var i = 0; i < august.length; i++){
+
+			// Generates buttons for each movie in the array 
+			var a = $('<button>') 
+		    a.addClass('activity'); // Added a class 
+		    a.attr('data-name', august[i]); // Added a data-attribute
+		    a.text(august[i]); // Provided the initial button text
+		    $('#buttonsView').append(a); // Added the button to the HTML
+		}
+	}
+
+	// on click event listener to add a new movie
+	$('#addActivity').on('click', function(){
+
+		// Grabs the input from the textbox
+		var september = $('#movie-input').val().trim();
+
+		// The movie from the textbox is then added to our array
+		august.push(september);
+		// renderButtons function is called
+		renderButtons();
+
+		return false;
+	})
+
+
+
+	  // Assigns a 'click' event listener 
+	  $('#buttonsView').on('click', '.activity', function() {
+	  	var m = $(this).text();
+        // Sets a variable to the API url with the api key and tag included
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + m + "&api_key=7Y00G7y7Ttg5Ybg2i4NExpJ0umrIEkX3&limit=10";
+        $.ajax({url: queryURL, method: 'GET'})
+
+        .done(function(response) {
+        	console.log(response);
+        	$('#gifsView').empty();
+        	var results = response.data;
+
+        	for (var i = 0; i < results.length; i++) {
+        		var gifDiv = $('<div class="item">')
+
+        		var rating = results[i].rating;
+
+        		var p = $('<p>').text("Rating: " + rating);
+
+        		var activityImage = $('<img>').height(200).width(350);
+	                    
+	                    activityImage.attr('src', results[i].images.fixed_height_still.url);
+	                    activityImage.attr('data-still', results[i].images.fixed_height_still.url);
+	                    activityImage.attr('data-animate', results[i].images.fixed_height.url);
+	                    activityImage.attr('data-state', 'still');
+
+
+	                    gifDiv.append(p);
+	                    gifDiv.append(activityImage);
+
+	                    $('#gifsView').prepend(gifDiv);
+
+	                     
+	                };	                    
+
+	            });
+	        });
+
+	  $('#gifsView').on('click', 'img', function() {
+	  	var state = $(this).attr('data-state'); 
+	  	console.log(state);
+	  	if ( state == 'still'){
+	  		$(this).attr('src', $(this).data('animate'));
+	  		$(this).attr('data-state', 'animate');
+	  	}else{
+	  		$(this).attr('src', $(this).data('still'));
+	  		$(this).attr('data-state', 'still');
+             
+	  	}
+
+	  });
+	 
+
+
+
+	// renderButtons function is called
+	renderButtons();
+        </script>
+	
+</body>
